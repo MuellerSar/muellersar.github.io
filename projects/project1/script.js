@@ -53,11 +53,11 @@ async function setup() {
 
 	font = await loadFont(fontPath);
 
-	points = font.textToPoints(word, width - 200, height - 50, {
+	points = font.textToPoints(word, width - 270, height - 50, {
 		sampleFactor: 0.2,
 	});
 
-	grassPoints = font.textToPoints(grassWord, width - 150, height - 50, {
+	grassPoints = font.textToPoints(grassWord, width - 210, height - 50, {
 		sampleFactor: 0.08,
 	});
 
