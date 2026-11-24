@@ -90,11 +90,62 @@ function draw() {
             }
         }
 
-        circle(x, y, 20);
+        pigeon(x, y, 1);
 
     }
-    
+
     fill(0);
     text(hoverText, mouseX + 15, mouseY);
 
+}
+
+function pigeon(x, y, s) {
+    push();
+    translate(x, y);
+    scale(s);
+
+    // Beine
+    push();
+    fill(220, 120, 130);
+    quad(-0.2, 5, 1, 5, -0.2, 8.9, -1.1, 8.9);           // Bein
+    quad(-1, 8.4, -3.8, 9.2, -3.6, 9.6, -0.8, 9.5);      // vordere Zehe
+    quad(-1, 8.6, -2.8, 9.7, -2.4, 9.9, -0.7, 9.4);      // seitliche Zehe
+    quad(-0.6, 8.6, 1.2, 9.3, 1.1, 9.6, -0.6, 9.5);      // hintere Zehe
+    circle(-0.6, 9, 1.1);                                // Gelenk
+    pop();
+
+    // Körper
+    beginShape();
+    splineVertex(-8.5, -11);
+    splineVertex(-6.5, -12.5);
+    splineVertex(-4.3, -11.6);
+    splineVertex(-3.8, -9);
+    splineVertex(-2.8, -5.5);
+    splineVertex(0, -3);
+    splineVertex(5, 0.5);
+    splineVertex(10, 4.5);
+    splineVertex(14, 8);
+    splineVertex(12.5, 8.8);
+    splineVertex(8, 7);
+    splineVertex(3, 5.8);
+    splineVertex(-1, 6);
+    splineVertex(-5, 4);
+    splineVertex(-8, 0);
+    splineVertex(-8.6, -4);
+    splineVertex(-8, -7.5);
+    splineVertex(-8.9, -9.8);
+    splineVertex(-8.5, -11);
+    splineVertex(-6.5, -12.5);
+    splineVertex(-4.3, -11.6);
+    endShape();
+
+    // Schnabel
+    fill(60);
+    triangle(-8.6, -10.8, -11, -9.8, -8.8, -9.4);
+
+    // Auge
+    fill(20);
+    circle(-6.6, -10.6, 1.2);
+
+    pop();
 }
