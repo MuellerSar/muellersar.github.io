@@ -35,7 +35,7 @@ async function setup() {
     scenarioRadio.option("50 %");
     scenarioRadio.option("90 %");
     scenarioRadio.selected("0 %");
-    scenarioRadio.position(50, 500);
+    scenarioRadio.position(50, 550);
 }
 
 function draw() {
@@ -96,6 +96,27 @@ function draw() {
 
     fill(0);
     text(hoverText, mouseX + 15, mouseY);
+
+    textSize(32);
+    text(nfc(pigeons) + " pigeons", 860, 100);
+
+    textSize(16);
+    text(100 - healthy + " % sick", 860, 125);
+
+    textSize(14);
+    text("1 pigeon = 100 pigeons", 860, 165);
+
+    // healthy
+    fill(80);
+    pigeon(870, 190, 1);
+    fill(0);
+    text("healthy", 890, 195);
+
+    // sick
+    fill(255, 0, 0);
+    pigeon(870, 220, 1);
+    fill(0);
+    text("sick", 890, 225)
 
 }
 
