@@ -10,9 +10,14 @@ let pigeons90 = [];
 let healthy90 = [];
 let healthyFood = ["wheat", "corn", "peas", "barley", "millet", "sunflower seeds", "lentils", "hemp seeds"];
 let sickFood = ["bread", "fries", "pizza crust", "croissant crumbs", "kebab leftovers", "chips", "popcorn", "burger bun"];
+let cols = 30;
+let spacing = 40;
+let pigeonSize = 1.6;
 
 async function setup() {
     createCanvas(windowWidth, windowHeight);
+    let gridWidth = (cols - 1) * spacing;
+    let startX = (width - gridWidth) / 2;
     noStroke();
 
     table = await loadTable("daten.csv", ",", "header");
@@ -28,14 +33,18 @@ async function setup() {
     }
 
     yearSlider = createSlider(0, years.length - 1, 0, 1);
-    yearSlider.position(50, 20);
+    yearSlider.size(gridWidth);
+    yearSlider.position(startX, 190);
+    yearSlider.style("accent-color", "#505050");
 
     scenarioRadio = createRadio();
     scenarioRadio.option("0 %");
     scenarioRadio.option("50 %");
     scenarioRadio.option("90 %");
     scenarioRadio.selected("0 %");
-    scenarioRadio.position(50, 550);
+    scenarioRadio.position(startX, 150);
+    scenarioRadio.style("accent-color", "#505050");
+    scenarioRadio.style("font-family", "sans-serif");
 }
 
 function draw() {
@@ -43,9 +52,6 @@ function draw() {
 
     let yearIndex = yearSlider.value();
     let choice = scenarioRadio.value();
-
-    fill(80);
-    text(years[yearIndex], 200, 35)
 
     let pigeons;
     let healthy;
@@ -63,15 +69,18 @@ function draw() {
 
     let count = round(pigeons / 100);
     let healthyCount = round(count * healthy / 100)
+    let gridWidth = (cols - 1) * spacing;
+    let startX = (width - gridWidth) / 2;
+    let endX = startX + gridWidth;
 
     let hoverText = "";
 
     for (let i = 0; i < count; i++) {
-        let col = i % 25;
-        let row = floor(i / 25);
+        let col = i % cols;
+        let row = floor(i / cols);
 
-        let x = 50 + col * 30;
-        let y = 100 + row * 30;
+        let x = startX + col * spacing;
+        let y = (100 + row * spacing) + 180;
 
         let d = dist(mouseX, mouseY, x, y);
 
@@ -81,7 +90,7 @@ function draw() {
             fill(255, 0, 0)
         }
 
-        if (d < 10) {
+        if (d < 25) {
             fill(0, 0, 255)
             if (i < healthyCount) {
                 hoverText = "Healthy · ate: " + healthyFood[i % healthyFood.length];
@@ -90,33 +99,45 @@ function draw() {
             }
         }
 
-        pigeon(x, y, 1);
+        pigeon(x, y, 1.6);
 
     }
+
+    let yearStep = (gridWidth - 24) / (years.length - 1);
+
+    fill(0);
+    textAlign(CENTER);
+    for (let i = 0; i < years.length; i++) {
+        let x = (startX + i * yearStep) + 12;
+
+        text(years[i], x, 230)
+    }
+    textAlign(LEFT);
 
     fill(0);
     text(hoverText, mouseX + 15, mouseY);
 
+    textAlign(RIGHT);
+
     textSize(32);
-    text(nfc(pigeons) + " pigeons", 860, 100);
+    text(nfc(pigeons) + " pigeons", endX, 70);
 
     textSize(16);
-    text(100 - healthy + " % sick", 860, 125);
+    text((100 - healthy) + "% sick", endX, 95);
 
     textSize(14);
-    text("1 pigeon = 100 pigeons", 860, 165);
+    text("1 pigeon = 100 pigeons", endX, 125);
 
-    // healthy
-    fill(80);
-    pigeon(870, 190, 1);
-    fill(0);
-    text("healthy", 890, 195);
-
-    // sick
+    text("sick", endX, 160);
     fill(255, 0, 0);
-    pigeon(870, 220, 1);
+    pigeon(endX - 50, 155, pigeonSize);
+
     fill(0);
-    text("sick", 890, 225)
+    text("healthy", endX - 80, 160);
+    fill(80);
+    pigeon(endX - 155, 155, pigeonSize);
+
+    textAlign(LEFT);
 
 }
 
