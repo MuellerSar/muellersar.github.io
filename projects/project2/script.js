@@ -1,3 +1,5 @@
+p5.disableFriendlyErrors = true;   // schneller, weniger Prüfungen
+
 let table;
 let years = [];
 let yearSlider;
@@ -15,6 +17,9 @@ let spacing = 40;
 let pigeonSize = 1.6;
 let started = false;
 let contentHeight = 760;   // Höhe von Titel bis unterste Taubenreihe (bei den meisten Tauben)
+let fadingOut = false;   // blendet das Intro gerade aus?
+let introFade = 0;       // wie weiss das Intro schon ist (0–255)
+let vizFade = 0;         // wie weiss die Visualisierung noch ist (255–0)
 
 async function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -67,9 +72,25 @@ async function setup() {
 function draw() {
     background(255);
 
-    // Intro: solange noch nicht geklickt wurde, nur das Intro zeichnen
+    // Intro: solange die Leertaste noch nicht gedrückt wurde, nur das Intro zeichnen
     if (!started) {
         drawIntro();
+
+        // Intro langsam weiss ausblenden
+        if (fadingOut) {
+            introFade += 10;
+            fill(255, introFade);
+            rect(0, 0, width, height);
+
+            if (introFade >= 255) {
+                started = true;
+                vizFade = 255;
+                yearSlider.show();
+                scenarioRadio.show();
+                yearSlider.style("opacity", 0);
+                scenarioRadio.style("opacity", 0);
+            }
+        }
         return;
     }
 
@@ -281,13 +302,24 @@ function draw() {
     text("Illustrative model data, based on the estimate of 16,000 city pigeons in Zurich.", leftEdge, height - 20);
 
     textAlign(LEFT);
+
+    // Visualisierung langsam aus dem Weiss einblenden
+    if (vizFade > 0) {
+        fill(255, vizFade);
+        rect(0, 0, width, height);
+        yearSlider.style("opacity", 1 - vizFade / 255);
+        scenarioRadio.style("opacity", 1 - vizFade / 255);
+        vizFade -= 10;
+    } else {
+        yearSlider.style("opacity", 1);
+        scenarioRadio.style("opacity", 1);
+    }
 }
 
-function mousePressed() {
-    if (!started) {
-        started = true;
-        yearSlider.show();
-        scenarioRadio.show();
+function keyPressed() {
+    if (!started && key == " ") {
+        fadingOut = true;
+        return false;
     }
 }
 
@@ -323,7 +355,7 @@ function drawIntro() {
     textStyle(NORMAL);
     textSize(18);
     fill(120);
-    text("Click anywhere to see what could happen to them.", width / 2, cy + 13 * S + 40);
+    text("Press space to see what could happen if we took responsibility.", width / 2, cy + 13 * S + 40);
     textAlign(LEFT);
 }
 
