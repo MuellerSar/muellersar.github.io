@@ -37,7 +37,7 @@ let falling = []; // fällt das Blatt schon?
 
 let leafPileX = [70, 400, 160, 765, 960, 400, 1130];
 let leafPileY = [650, 450, 510, 545, 400, 800, 480];
-let randomLeafX = [60, 950, 680, 280];
+let randomLeafX = [60, 950, 680, 340];
 let randomLeafY = [400, 500, 450, 500];
 let pileLeafX = [];
 let pileLeafY = [];
@@ -122,10 +122,13 @@ async function setup() {
 }
 
 function draw() {
-	background(220);
-
-	fill(0, 0, 200, 50);
-	rect(0, 0, width, height);
+	let skyTop = color("#9C9CD2");
+	let skyBottom = color("#E6D3DC");
+	for (let y = 0; y < ground + 60; y++) {
+		stroke(lerpColor(skyTop, skyBottom, y / (ground + 60)));
+		line(0, y, width, y);
+	}
+	noStroke();
 
 	fill(78, 75, 55);
 	beginShape();
