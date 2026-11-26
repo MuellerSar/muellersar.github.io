@@ -14,6 +14,7 @@ let cols = 30;
 let spacing = 40;
 let pigeonSize = 1.6;
 let started = false;
+let contentHeight = 760;   // Höhe von Titel bis unterste Taubenreihe (bei den meisten Tauben)
 
 async function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -23,6 +24,7 @@ async function setup() {
     let startX = (width - gridWidth) / 2;
     let leftEdge = startX - 11 * pigeonSize;
     let sliderWidth = gridWidth + 25 * pigeonSize;
+    let topY = max(0, (height - contentHeight) / 2);   // alles vertikal zentrieren
 
     table = await loadTable("daten.csv", ",", "header");
 
@@ -38,7 +40,7 @@ async function setup() {
 
     yearSlider = createSlider(0, years.length - 1, 0, 1);
     yearSlider.size(sliderWidth);
-    yearSlider.position(leftEdge, 190);
+    yearSlider.position(leftEdge, topY + 190);
     yearSlider.style("accent-color", "#4F5B66");
 
     scenarioRadio = createRadio();
@@ -52,7 +54,7 @@ async function setup() {
     let labelWidth = textWidth("Eggs replaced with dummy eggs:");
     textStyle(NORMAL);
 
-    scenarioRadio.position(leftEdge + labelWidth + 12, 117);
+    scenarioRadio.position(leftEdge + labelWidth + 12, topY + 117);
     scenarioRadio.style("accent-color", "#4F5B66");
     scenarioRadio.style("font-family", "sans-serif");
     scenarioRadio.style("font-size", "16px");
@@ -96,6 +98,7 @@ function draw() {
 
     let leftEdge = startX - 11 * pigeonSize;
     let rightEdge = endX + 14 * pigeonSize;
+    let topY = max(0, (height - contentHeight) / 2);   // alles vertikal zentrieren
 
     let hoverStatus = "";
     let hoverFood;
@@ -110,7 +113,7 @@ function draw() {
         let row = floor(i / cols);
 
         let x = startX + col * spacing;
-        let y = 280 + row * spacing;
+        let y = topY + 280 + row * spacing;
 
         let d = dist(mouseX, mouseY, x, y);
 
@@ -200,7 +203,7 @@ function draw() {
             textStyle(NORMAL);
         }
 
-        text(years[i], x, 230);
+        text(years[i], x, topY + 230);
     }
     textAlign(LEFT);
     textStyle(NORMAL);
@@ -215,12 +218,12 @@ function draw() {
         // "ate corn" normal, ganz rechts
         textStyle(NORMAL);
         let foodText = " ate " + hoverFood;
-        text(foodText, rightEdge, 95);
+        text(foodText, rightEdge, topY + 95);
 
         // "Healthy" fett, direkt links davor
         let foodWidth = textWidth(foodText);
         textStyle(BOLD);
-        text(hoverStatus, rightEdge - foodWidth, 95);
+        text(hoverStatus, rightEdge - foodWidth, topY + 95);
 
         textStyle(NORMAL);
         textAlign(LEFT);
@@ -232,28 +235,28 @@ function draw() {
     textStyle(BOLD);
 
     fill(0);
-    text(nfc(pigeons) + " pigeons", leftEdge, 60);
+    text(nfc(pigeons) + " pigeons", leftEdge, topY + 60);
 
     textAlign(RIGHT);
     fill("#C8553D");
-    text((100 - healthy) + "% malnourished", rightEdge, 60);
+    text((100 - healthy) + "% malnourished", rightEdge, topY + 60);
 
     // Untertitel und Schalter-Beschriftung
     fill(0);
     textAlign(LEFT);
     textStyle(NORMAL);
     textSize(16);
-    text("What if Zurich swapped pigeon eggs for dummy eggs?", leftEdge, 95);
+    text("What if Zurich swapped pigeon eggs for dummy eggs?", leftEdge, topY + 95);
 
     textStyle(BOLD);
-    text("Eggs replaced with dummy eggs:", leftEdge, 130);
+    text("Eggs replaced with dummy eggs:", leftEdge, topY + 130);
 
     // Legende (von rechts nach links aufgebaut, Abstände mit textWidth gemessen)
     textStyle(NORMAL);
     textSize(16);
     textAlign(RIGHT);
     fill(0);
-    text("1 pigeon = 100 pigeons", rightEdge, 125);
+    text("1 pigeon = 100 pigeons", rightEdge, topY + 125);
 
     let gap = 30;                                          // Abstand Text -> Taube
     let malX = rightEdge;                                  // Text "malnourished" endet hier
@@ -262,14 +265,14 @@ function draw() {
     let healthyPigeonX = healthyX - textWidth("healthy") - gap;
 
     fill(0);
-    text("malnourished", malX, 160);
+    text("malnourished", malX, topY + 160);
     fill("#C8553D");
-    pigeon(malPigeonX, 155, pigeonSize);
+    pigeon(malPigeonX, topY + 155, pigeonSize);
 
     fill(0);
-    text("healthy", healthyX, 160);
+    text("healthy", healthyX, topY + 160);
     fill("#7D8A96");
-    pigeon(healthyPigeonX, 155, pigeonSize);
+    pigeon(healthyPigeonX, topY + 155, pigeonSize);
 
     // Hinweis zu den Daten
     textSize(12);
