@@ -9,10 +9,11 @@ let healthy50 = [];
 let pigeons90 = [];
 let healthy90 = [];
 let healthyFood = ["corn", "peas", "sunflower seeds"];
-let sickFood = ["fries", "bread", "popcorn", "pizza"];
+let malnourishedFood = ["fries", "bread", "popcorn", "pizza"];
 let cols = 30;
 let spacing = 40;
 let pigeonSize = 1.6;
+let started = false;
 
 async function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -45,13 +46,30 @@ async function setup() {
     scenarioRadio.option("50% ");
     scenarioRadio.option("90% ");
     scenarioRadio.selected("0% ");
-    scenarioRadio.position(leftEdge + 260, 116);
+    // Schalter direkt hinter die Beschriftung setzen (Breite messen)
+    textSize(16);
+    textStyle(BOLD);
+    let labelWidth = textWidth("Eggs replaced with dummy eggs:");
+    textStyle(NORMAL);
+
+    scenarioRadio.position(leftEdge + labelWidth + 12, 117);
     scenarioRadio.style("accent-color", "#4F5B66");
     scenarioRadio.style("font-family", "sans-serif");
+    scenarioRadio.style("font-size", "16px");
+
+    // Am Anfang ist das Intro zu sehen, darum Steuerung verstecken
+    yearSlider.hide();
+    scenarioRadio.hide();
 }
 
 function draw() {
     background(255);
+
+    // Intro: solange noch nicht geklickt wurde, nur das Intro zeichnen
+    if (!started) {
+        drawIntro();
+        return;
+    }
 
     let yearIndex = yearSlider.value();
     let choice = scenarioRadio.value();
@@ -79,7 +97,7 @@ function draw() {
     let leftEdge = startX - 11 * pigeonSize;
     let rightEdge = endX + 14 * pigeonSize;
 
-    let hoverText = "";
+    let hoverStatus = "";
     let hoverFood;
     let hoverX;
     let hoverY;
@@ -121,12 +139,12 @@ function draw() {
                 hoverColor = "#4F5B66";
                 fill(hoverColor);
                 hoverFood = healthyFood[i % healthyFood.length];
-                hoverText = "Healthy · ate: " + hoverFood;
+                hoverStatus = "Healthy";
             } else {
                 hoverColor = "#8E3324";
                 fill(hoverColor);
-                hoverFood = sickFood[i % sickFood.length];
-                hoverText = "Sick · ate: " + hoverFood;
+                hoverFood = malnourishedFood[i % malnourishedFood.length];
+                hoverStatus = "Malnourished";
             }
         }
 
@@ -134,7 +152,7 @@ function draw() {
     }
 
     // Hover-Taube obendrauf
-    if (hoverText != "") {
+    if (hoverStatus != "") {
         let s = hoverSize;
 
         if (mouseIsPressed) {
@@ -150,11 +168,15 @@ function draw() {
             fill(hoverColor);
             pigeon(hoverX, hoverY, s, tilt);
 
-            // Text unter der Taube
+            // Text unter der Taube, auf zwei Zeilen
             textAlign(CENTER);
-            textSize(20);
             fill(hoverColor);
-            text(hoverText, hoverX - 4 * s, hoverY + 13 * s);
+            textSize(22);
+            textStyle(BOLD);
+            text(hoverStatus, hoverX - 4 * s, hoverY + 13 * s);
+            textSize(18);
+            textStyle(NORMAL);
+            text("ate " + hoverFood, hoverX - 4 * s, hoverY + 13 * s + 24);
             textAlign(LEFT);
         } else {
             fill(hoverColor);
@@ -185,10 +207,22 @@ function draw() {
     fill(0);
 
     // Hover-Text oben rechts
-    if (hoverText != "" && !mouseIsPressed) {
+    if (hoverStatus != "" && !mouseIsPressed) {
+        textSize(16);
         textAlign(RIGHT);
         fill(hoverColor);
-        text(hoverText, rightEdge, 95);
+
+        // "ate corn" normal, ganz rechts
+        textStyle(NORMAL);
+        let foodText = " ate " + hoverFood;
+        text(foodText, rightEdge, 95);
+
+        // "Healthy" fett, direkt links davor
+        let foodWidth = textWidth(foodText);
+        textStyle(BOLD);
+        text(hoverStatus, rightEdge - foodWidth, 95);
+
+        textStyle(NORMAL);
         textAlign(LEFT);
         fill(0);
     }
@@ -202,32 +236,91 @@ function draw() {
 
     textAlign(RIGHT);
     fill("#C8553D");
-    text((100 - healthy) + "% sick", rightEdge, 60);
+    text((100 - healthy) + "% malnourished", rightEdge, 60);
 
     // Untertitel und Schalter-Beschriftung
     fill(0);
     textAlign(LEFT);
     textStyle(NORMAL);
     textSize(16);
-    text("What if Zürich swapped pigeon eggs for dummy eggs?", leftEdge, 95);
+    text("What if Zurich swapped pigeon eggs for dummy eggs?", leftEdge, 95);
 
     textStyle(BOLD);
     text("Eggs replaced with dummy eggs:", leftEdge, 130);
 
-    // Legende
+    // Legende (von rechts nach links aufgebaut, Abstände mit textWidth gemessen)
     textStyle(NORMAL);
+    textSize(16);
     textAlign(RIGHT);
+    fill(0);
     text("1 pigeon = 100 pigeons", rightEdge, 125);
 
-    text("sick", rightEdge, 160);
-    fill("#C8553D");
-    pigeon(rightEdge - 50, 155, pigeonSize);
+    let gap = 30;                                          // Abstand Text -> Taube
+    let malX = rightEdge;                                  // Text "malnourished" endet hier
+    let malPigeonX = malX - textWidth("malnourished") - gap;
+    let healthyX = malPigeonX - 18 * pigeonSize;           // "healthy" endet links vor der roten Taube
+    let healthyPigeonX = healthyX - textWidth("healthy") - gap;
 
     fill(0);
-    text("healthy", rightEdge - 80, 160);
-    fill("#7D8A96");
-    pigeon(rightEdge - 155, 155, pigeonSize);
+    text("malnourished", malX, 160);
+    fill("#C8553D");
+    pigeon(malPigeonX, 155, pigeonSize);
 
+    fill(0);
+    text("healthy", healthyX, 160);
+    fill("#7D8A96");
+    pigeon(healthyPigeonX, 155, pigeonSize);
+
+    // Hinweis zu den Daten
+    textSize(12);
+    fill(150);
+    textAlign(LEFT);
+    text("Illustrative model data, based on the estimate of 16,000 city pigeons in Zurich.", leftEdge, height - 20);
+
+    textAlign(LEFT);
+}
+
+function mousePressed() {
+    if (!started) {
+        started = true;
+        yearSlider.show();
+        scenarioRadio.show();
+    }
+}
+
+function drawIntro() {
+    let S = min(width, height) / 40;        // Grösse der Intro-Taube
+    let cx = width / 2;
+    let cy = height / 2 - 40;
+
+    // Schatten am Boden
+    fill(235);
+    ellipse(cx, cy + 9.8 * S, 22 * S, 1.6 * S);
+
+    // grosse Taube
+    fill("#7D8A96");
+    pigeon(cx, cy, S);
+
+    // Auge, das der Maus folgt
+    let eyeX = cx - 6.6 * S;
+    let eyeY = cy - 10.6 * S;
+    fill(255);
+    circle(eyeX, eyeY, 1.8 * S);
+    let angle = atan2(mouseY - eyeY, mouseX - eyeX);
+    fill(20);
+    circle(eyeX + cos(angle) * 0.4 * S, eyeY + sin(angle) * 0.4 * S, 0.9 * S);
+
+    // Text
+    textAlign(CENTER);
+    fill(0);
+    textStyle(BOLD);
+    textSize(44);
+    text("16,000 pigeons live in Zurich.", width / 2, cy + 13 * S);
+
+    textStyle(NORMAL);
+    textSize(18);
+    fill(120);
+    text("Click anywhere to see what could happen to them.", width / 2, cy + 13 * S + 40);
     textAlign(LEFT);
 }
 
