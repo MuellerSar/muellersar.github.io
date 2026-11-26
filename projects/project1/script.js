@@ -13,7 +13,7 @@ let grassPoints; // Punkte der Grashalme
 let ground = 350; // wo der Boden beginnt
 
 // BÄUME
-let trunkX = [100, 200, 400, 800, 950];
+let trunkX = [150, 250, 400, 800, 950];
 let trunkY = [200, 250, 150, 200, 150];
 let trunkH = [300, 350, 250, 350, 250];
 let thickness = [40, 50, 30, 40, 30];
@@ -35,9 +35,9 @@ let leafColor = [];
 let leafAngle = [];
 let falling = []; // fällt das Blatt schon?
 
-let leafPileX = [0, 400, 100, 765, 960, 400, 1200];
+let leafPileX = [70, 400, 160, 765, 960, 400, 1130];
 let leafPileY = [650, 450, 510, 545, 400, 800, 480];
-let randomLeafX = [20, 950, 680, 280];
+let randomLeafX = [60, 950, 680, 280];
 let randomLeafY = [400, 500, 450, 500];
 let pileLeafX = [];
 let pileLeafY = [];

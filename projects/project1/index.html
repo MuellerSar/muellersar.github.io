@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Project</title>
 	<style>
-		html, body { margin: 0; padding: 0; overflow: hidden; }
-		canvas { display: block; }
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			overflow: hidden;
+			background:
+				linear-gradient(to bottom, #B1B1D5 45.3%, #4D4B39 45.3%) left / 50% 100% no-repeat,
+				linear-gradient(to bottom, #B1B1D5 46.6%, #4D4B39 46.6%) right / 50% 100% no-repeat;
+		}
+
+		body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		canvas {
+			display: block;
+			width: min(100vw, 150vh) !important;
+			height: auto !important;
+		}
 	</style>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/2.0.5/p5.min.js"></script>
 </head>
+
 <body>
-	<script src="script.js"></script> 
+	<script src="script.js"></script>
 </body>
 
 </html>
