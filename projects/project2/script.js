@@ -1,4 +1,4 @@
-p5.disableFriendlyErrors = true;   // schneller, weniger Prüfungen
+p5.disableFriendlyErrors = true;
 
 let table;
 let years = [];
@@ -16,7 +16,7 @@ let cols = 30;
 let spacing = 40;
 let pigeonSize = 1.6;
 let started = false;
-let contentHeight = 760;   // Höhe von Titel bis unterste Taubenreihe (bei den meisten Tauben)
+let contentHeight = 790;   // Höhe von Titel bis unterste Taubenreihe (bei den meisten Tauben)
 let fadingOut = false;   // blendet das Intro gerade aus?
 let introFade = 0;       // wie weiss das Intro schon ist (0–255)
 let vizFade = 0;         // wie weiss die Visualisierung noch ist (255–0)
@@ -45,8 +45,8 @@ async function setup() {
 
     yearSlider = createSlider(0, years.length - 1, 0, 1);
     yearSlider.size(sliderWidth);
-    yearSlider.position(leftEdge, topY + 190);
-    yearSlider.style("accent-color", "#4F5B66");
+    yearSlider.position(leftEdge, topY + 215);
+    yearSlider.style("accent-color", "#A3AEB8");   // ruhiger als der Schalter
 
     scenarioRadio = createRadio();
     scenarioRadio.option("0% ");
@@ -54,15 +54,12 @@ async function setup() {
     scenarioRadio.option("90% ");
     scenarioRadio.selected("0% ");
     // Schalter direkt hinter die Beschriftung setzen (Breite messen)
-    textSize(16);
+    textSize(20);
     textStyle(BOLD);
-    let labelWidth = textWidth("Eggs replaced with dummy eggs:");
+    let labelWidth = textWidth("How many eggs do we replace?");
     textStyle(NORMAL);
 
-    scenarioRadio.position(leftEdge + labelWidth + 12, topY + 110);
-    scenarioRadio.style("accent-color", "#4F5B66");
-    scenarioRadio.style("font-family", "sans-serif");
-    scenarioRadio.style("font-size", "16px");
+    scenarioRadio.position(leftEdge + labelWidth + 16, topY + 122);
     scenarioRadio.class("segmented");
 
     // Am Anfang ist das Intro zu sehen, darum Steuerung verstecken
@@ -135,7 +132,7 @@ function draw() {
         let row = floor(i / cols);
 
         let x = startX + col * spacing;
-        let y = topY + 280 + row * spacing;
+        let y = topY + 310 + row * spacing;
 
         let d = dist(mouseX, mouseY, x, y);
 
@@ -212,20 +209,20 @@ function draw() {
     // Jahreszahlen unter dem Slider
     let yearStep = (rightEdge - leftEdge - 24) / (years.length - 1);
 
-    textSize(16);
+    textSize(14);
     textAlign(CENTER);
     for (let i = 0; i < years.length; i++) {
         let x = leftEdge + 12 + i * yearStep;
 
         if (i == yearIndex) {
-            fill(0);
+            fill(60);
             textStyle(BOLD);
         } else {
-            fill(180);
+            fill(190);
             textStyle(NORMAL);
         }
 
-        text(years[i], x, topY + 230);
+        text(years[i], x, topY + 255);
     }
     textAlign(LEFT);
     textStyle(NORMAL);
@@ -267,13 +264,15 @@ function draw() {
     fill(0);
     textAlign(LEFT);
     textStyle(NORMAL);
-    textSize(16);
-    text("What if Zurich swapped pigeon eggs for dummy eggs?", leftEdge, topY + 95);
+    textSize(20);
+    text("What if Zurich swapped pigeon eggs for dummy eggs?", leftEdge, topY + 100);
 
     textStyle(BOLD);
-    text("Eggs replaced with dummy eggs:", leftEdge, topY + 130);
+    textSize(20);
+    text("How many eggs do we replace?", leftEdge, topY + 153);
+    textSize(16);
 
-    // Legende in einer Zeile, auf Höhe vom Schalter (von rechts nach links aufgebaut)
+    // Legende in einer Zeile, auf Höhe der Frage (von rechts nach links aufgebaut)
     textStyle(NORMAL);
     textSize(16);
     textAlign(RIGHT);
@@ -286,17 +285,17 @@ function draw() {
     let scaleX = healthyPigeonX - 18 * pigeonSize - 16;    // "1 pigeon = 100 pigeons" endet hier
 
     fill(0);
-    text("malnourished", malX, topY + 130);
+    text("malnourished", malX, topY + 152);
     fill("#C8553D");
-    pigeon(malPigeonX, topY + 125, pigeonSize);
+    pigeon(malPigeonX, topY + 147, pigeonSize);
 
     fill(0);
-    text("healthy", healthyX, topY + 130);
+    text("healthy", healthyX, topY + 152);
     fill("#7D8A96");
-    pigeon(healthyPigeonX, topY + 125, pigeonSize);
+    pigeon(healthyPigeonX, topY + 147, pigeonSize);
 
     fill(130);
-    text("1 pigeon = 100 pigeons", scaleX, topY + 130);
+    text("1 pigeon = 100 pigeons", scaleX, topY + 152);
 
     // Hinweis zu den Daten
     textSize(12);
