@@ -59,10 +59,11 @@ async function setup() {
     let labelWidth = textWidth("Eggs replaced with dummy eggs:");
     textStyle(NORMAL);
 
-    scenarioRadio.position(leftEdge + labelWidth + 12, topY + 117);
+    scenarioRadio.position(leftEdge + labelWidth + 12, topY + 110);
     scenarioRadio.style("accent-color", "#4F5B66");
     scenarioRadio.style("font-family", "sans-serif");
     scenarioRadio.style("font-size", "16px");
+    scenarioRadio.class("segmented");
 
     // Am Anfang ist das Intro zu sehen, darum Steuerung verstecken
     yearSlider.hide();
@@ -272,28 +273,30 @@ function draw() {
     textStyle(BOLD);
     text("Eggs replaced with dummy eggs:", leftEdge, topY + 130);
 
-    // Legende (von rechts nach links aufgebaut, Abstände mit textWidth gemessen)
+    // Legende in einer Zeile, auf Höhe vom Schalter (von rechts nach links aufgebaut)
     textStyle(NORMAL);
     textSize(16);
     textAlign(RIGHT);
-    fill(0);
-    text("1 pigeon = 100 pigeons", rightEdge, topY + 125);
 
     let gap = 30;                                          // Abstand Text -> Taube
-    let malX = rightEdge;                                  // Text "malnourished" endet hier
+    let malX = rightEdge;                                  // "malnourished" endet hier
     let malPigeonX = malX - textWidth("malnourished") - gap;
-    let healthyX = malPigeonX - 18 * pigeonSize;           // "healthy" endet links vor der roten Taube
+    let healthyX = malPigeonX - 18 * pigeonSize;           // "healthy" endet vor der roten Taube
     let healthyPigeonX = healthyX - textWidth("healthy") - gap;
+    let scaleX = healthyPigeonX - 18 * pigeonSize - 16;    // "1 pigeon = 100 pigeons" endet hier
 
     fill(0);
-    text("malnourished", malX, topY + 160);
+    text("malnourished", malX, topY + 130);
     fill("#C8553D");
-    pigeon(malPigeonX, topY + 155, pigeonSize);
+    pigeon(malPigeonX, topY + 125, pigeonSize);
 
     fill(0);
-    text("healthy", healthyX, topY + 160);
+    text("healthy", healthyX, topY + 130);
     fill("#7D8A96");
-    pigeon(healthyPigeonX, topY + 155, pigeonSize);
+    pigeon(healthyPigeonX, topY + 125, pigeonSize);
+
+    fill(130);
+    text("1 pigeon = 100 pigeons", scaleX, topY + 130);
 
     // Hinweis zu den Daten
     textSize(12);
@@ -353,9 +356,13 @@ function drawIntro() {
     text("16,000 pigeons live in Zurich.", width / 2, cy + 13 * S);
 
     textStyle(NORMAL);
-    textSize(18);
-    fill(120);
-    text("Press space to see what could happen if we took responsibility.", width / 2, cy + 13 * S + 40);
+    textSize(20);
+    fill(60);
+    text("What if we take responsibility? And what if we don't?", width / 2, cy + 13 * S + 42);
+
+    textSize(14);
+    fill(150);
+    text("Press space", width / 2, cy + 13 * S + 80);
     textAlign(LEFT);
 }
 
